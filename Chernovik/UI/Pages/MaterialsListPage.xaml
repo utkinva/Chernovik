@@ -1,0 +1,96 @@
+﻿<Page x:Class="Chernovik.UI.Pages.MaterialsListPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Chernovik.UI.Pages" xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="1000"
+      Title="MaterialsListPage">
+    <Page.Resources>
+        <sys:String x:Key="NullImage">
+            pack://application:,,,/UI/materials/picture.png
+        </sys:String>
+    </Page.Resources>
+    <Grid Width="870">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Width="870" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <TextBox FontFamily="Segoe Print" FontSize="16" Width="285"
+                         Height="30" x:Name="searchTextBox" Margin="15 0 15 0"
+                         TextChanged="searchTextBox_TextChanged"/>
+                <ComboBox FontFamily="Segoe Print" FontSize="16" Width="200"
+                          x:Name="sortComboBox" Height="30" Margin="0 0 15 0"
+                          SelectionChanged="sortComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Без сортировки"/>
+                    <ComboBoxItem Content="Наименование"/>
+                    <ComboBoxItem Content="Остаток на складе"/>
+                    <ComboBoxItem Content="Стоимость"/>
+                </ComboBox>
+                <CheckBox x:Name="ascDescCheckBox" Content="По убыванию"
+                          FontFamily="Segoe Print" Margin="0 0 15 0" FontSize="16"
+                          VerticalAlignment="Center" Padding="2 -6"
+                          Checked="ascDescCheckBox_Checked" Unchecked="ascDescCheckBox_Unchecked"/>
+                <ComboBox FontFamily="Segoe Print" FontSize="16" Width="180"
+                          x:Name="filterComboBox" Height="30" 
+                          SelectedValuePath="ID" DisplayMemberPath="Title"
+                          SelectionChanged="filterComboBox_SelectionChanged"/>
+            </StackPanel>
+        </Grid>
+
+        <ListView x:Name="materialsListV" Grid.Row="1" FontFamily="Segoe Print" FontSize="17" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  SelectionChanged="materialsListV_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="150">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="170"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Text="{Binding Image, StringFormat=..{0}}" Name="imgPath" Visibility="Collapsed"/>
+                        <Image Source="{Binding Text, ElementName=imgPath, FallbackValue={StaticResource NullImage}}"
+                               Grid.RowSpan="3" Grid.Column="0"
+                               Width="150" Stretch="Uniform"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} | {1}">
+                                    <Binding Path="MaterialType.Title"/>
+                                    <Binding Path="Title"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Supplier, StringFormat=Поставщики: {0}}"
+                                   TextWrapping="Wrap" Width="600"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CountInStock, StringFormat=Остаток:{0} шт.}"
+                                   HorizontalAlignment="Right" Margin="50 0 0 0"/>
+                        <TextBlock Text="{Binding MinCount, StringFormat=Минимальное количество:{0}}"
+                                   Grid.Column="1" Grid.Row="1"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Grid Width="870" Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="30 0 0 0" Style="{StaticResource MainBtn}" HorizontalAlignment="Left"
+                        Content="Добавить" Padding="0 -2" x:Name="addBtn" Click="addBtn_Click"/>
+                <Button Margin="20 0 0 0" Style="{StaticResource MainBtn}" HorizontalAlignment="Left"
+                        Content="Изменить" Padding="0 -2" x:Name="editBtn" Click="editBtn_Click"
+                        Visibility="Hidden"/>
+                <Button Margin="340 0 0 0" Style="{StaticResource MainBtn}" HorizontalAlignment="Left"
+                        Content="Удалить" Padding="0 -2" x:Name="deleteBtn" Click="deleteBtn_Click"
+                        Visibility="Hidden"/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Page>
